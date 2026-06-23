@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boleta | Pastelería Mil Sabores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="icon" type="image/jpeg" href="../assets/favicon.jpg" />
+  <style>
+    @media print {
+      .navbar, .no-print, footer { display: none !important; }
+      body { background: white; }
+      .boleta-wrapper { box-shadow: none; }
+    }
+
+    .boleta-wrapper {
+      max-width: 680px;
+      margin: 2rem auto;
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px var(--shadow);
+      overflow: hidden;
+    }
+
+    .boleta-header {
+      background: linear-gradient(135deg, var(--chocolate), #a0522d);
+      color: white;
+      padding: 2.5rem 2.5rem 2rem;
+      text-align: center;
+    }
+
+    .boleta-logo { font-size: 3rem; margin-bottom: 0.5rem; }
+    .boleta-title { font-family: 'Pacifico', cursive; font-size: 1.8rem; margin-bottom: 0.3rem; }
+    .boleta-subtitle { opacity: 0.85; font-size: 0.9rem; }
+    .boleta-num {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 0.3rem 1rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      margin-top: 0.8rem;
+    }
+
+    .boleta-body { padding: 2rem 2.5rem; }
+
+    .boleta-section { margin-bottom: 1.8rem; }
+    .boleta-section-title {
+      font-weight: 900;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-light);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 2rem;
+      font-size: 0.9rem;
+    }
+    .info-item { display: flex; flex-direction: column; }
+    .info-label { font-size: 0.75rem; color: var(--text-light); margin-bottom: 0.1rem; }
+    .info-value { font-weight: 700; color: var(--text-dark); }
+
+    .boleta-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .boleta-table th {
+      background: var(--bg-cream);
+      padding: 0.6rem 0.8rem;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-light);
+    }
+    .boleta-table td { padding: 0.8rem; border-bottom: 1px solid var(--border); color: var(--text-dark); vertical-align: top; }
+    .boleta-table tr:last-child td { border-bottom: none; }
+
+    .boleta-totals { margin-top: 1rem; }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0;
+      font-size: 0.92rem;
+      color: var(--text-dark);
+    }
+    .total-row.discount { color: var(--success); font-weight: 700; }
+    .total-row.grand {
+      border-top: 2px solid var(--chocolate);
+      margin-top: 0.5rem;
+      padding-top: 0.8rem;
+      font-family: 'Pacifico', cursive;
+      font-size: 1.2rem;
+      color: var(--chocolate);
+    }
+
+    .boleta-footer-note {
+      background: var(--bg-cream);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      text-align: center;
+      margin-top: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .status-timeline {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 1.5rem 0;
+      padding: 0 0.5rem;
+    }
+
+    .status-timeline::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 40px;
+      right: 40px;
+      height: 3px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .status-timeline::after {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 40px;
+      width: var(--progress, 0%);
+      height: 3px;
+      background: var(--chocolate);
+      z-index: 1;
+      transition: width 0.5s;
+    }
+
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      z-index: 2;
+      min-width: 60px;
+      text-align: center;
+    }
+
+    .step-circle {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 3px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .step-circle.done {
+      border-color: var(--chocolate);
+      background: var(--chocolate);
+      color: white;
+    }
+
+    .step-circle.current {
+      border-color: var(--chocolate);
+      background: var(--rosa);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(139,69,19,0.3); }
+      50% { box-shadow: 0 0 0 8px rgba(139,69,19,0); }
+    }
+
+    .step-label { font-size: 0.7rem; font-weight: 700; color: var(--text-light); max-width: 60px; line-height: 1.2; }
+    .step-label.active { color: var(--chocolate); }
+
+    .share-section {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .share-section p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.8rem; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar no-print">
+    <div class="nav-brand">
+      <span class="brand-logo">🎂</span>
+      <a href="../index.html" class="brand-name">Mil Sabores</a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Inicio</a></li>
+      <li><a href="catalogo.html">Catálogo</a></li>
+      <li><a href="seguimiento.html">📦 Seguimiento</a></li>
+      <li><a href="carrito.html">🛒 Carrito <span class="cart-badge" id="cartBadge">0</span></a></li>
+      <li><a href="perfil.html" id="navAuthLink">Mi Perfil</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header no-print">
+    <h1>🧾 Boleta de Compra</h1>
+    <p>Comprobante oficial de tu pedido</p>
+  </div>
+
+  <div class="container" style="padding: 1.5rem 2rem 4rem">
+
+    <!-- ACCIONES -->
+    <div class="no-print" style="display:flex;gap:0.8rem;justify-content:center;margin-bottom:1.5rem;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Imprimir Boleta</button>
+      <button class="btn btn-secondary" onclick="downloadBoleta()">⬇️ Descargar PDF</button>
+      <button class="btn btn-outline" onclick="shareBoleta('whatsapp')">💬 Compartir por WhatsApp</button>
+      <a href="perfil.html" class="btn btn-outline">← Volver al Perfil</a>
+    </div>
+
+    <!-- BOLETA -->
+    <div class="boleta-wrapper" id="boletaDoc">
+
+      <div class="boleta-header">
+        <div class="boleta-logo">🎂</div>
+        <div class="boleta-title">Pastelería Mil Sabores</div>
+        <div class="boleta-subtitle">Santiago, Chile · RUT 76.XXX.XXX-X</div>
+        <div class="boleta-num" id="boletaNum">Boleta N° ---</div>
+      </div>
+
+      <div class="boleta-body">
+
+        <!-- DATOS DEL CLIENTE -->
+        <div class="boleta-section">
+          <div class="boleta-section-title">Datos del Cliente</div>
+          <div class="info-grid" id="clienteInfo">
+            <div class="info-item"><span class="info-label">Nombre</span><span class="info-value" id="clienteNombre">—</span></div>
+            <div class="info-item"><span class="info-label">Email</span><span class="info-value" id="clienteEmail">—</span></div>
+            <div class="info-item"><span class="info-label">Teléfono</span><span class="info-value" id="clienteTel">—</span></div>
+            <div class="info-item"><span class="info-label">Fecha Pedido</span><span class="info-value" id="fechaPedido">—</span></div>
+          </div>
+        </div>
+
+        <!-- DATOS ENTREGA -->
+        <div class="boleta-section">
+          <div class="boleta-section-title">Información de Entrega</div>
+          <div class="info-grid">
+            <div class="info-item"><span class="info-label">Dirección</span><span class="info-value" id="entregaDireccion">—</span></div>
+            <div class="info-item"><span class="info-label">Fecha de Entrega</span><span class="info-value" id="entregaFecha">—</span></div>
+            <div class="info-item"><span class="info-label">Horario</span><span class="info-value" id="entregaHorario">—</span></div>
+            <div class="info-item"><span class="info-label">Estado</span><span class="info-value" id="entregaEstado">—</span></div>
+          </div>
+        </div>
+
+        <!-- SEGUIMIENTO -->
+        <div class="boleta-section">
+          <div class="boleta-section-title">Seguimiento del Pedido</div>
+          <div class="status-timeline" id="timeline" style="--progress: 15%">
+            <div class="timeline-step">
+              <div class="step-circle done" id="step1">✓</div>
+              <div class="step-label active">Pedido recibido</div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-circle" id="step2">👨‍🍳</div>
+              <div class="step-label" id="label2">Preparando</div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-circle" id="step3">📦</div>
+              <div class="step-label" id="label3">Listo</div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-circle" id="step4">🚚</div>
+              <div class="step-label" id="label4">En despacho</div>
+            </div>
+            <div class="timeline-step">
+              <div class="step-circle" id="step5">🏠</div>
+              <div class="step-label" id="label5">Entregado</div>
+            </div>
+          </div>
+          <p style="font-size:0.82rem;color:var(--text-light);text-align:center" id="statusMsg">Tu pedido fue recibido y está siendo procesado.</p>
+        </div>
+
+        <!-- PRODUCTOS -->
+        <div class="boleta-section">
+          <div class="boleta-section-title">Detalle de Productos</div>
+          <table class="boleta-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th style="text-align:center">Cant.</th>
+                <th style="text-align:right">Precio Unit.</th>
+                <th style="text-align:right">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- TOTALES -->
+        <div class="boleta-section boleta-totals">
+          <div class="boleta-section-title">Resumen de Pago</div>
+          <div class="total-row"><span>Subtotal productos</span><span id="totalSubtotal">—</span></div>
+          <div class="total-row" id="totalDescuentoRow" style="display:none"><span id="totalDescuentoLabel">Descuento</span><span id="totalDescuento">—</span></div>
+          <div class="total-row" id="totalIvaRow"><span>IVA (19%)</span><span id="totalIva">—</span></div>
+          <div class="total-row grand"><span>TOTAL</span><span id="totalFinal">—</span></div>
+          <p style="font-size:0.78rem;color:var(--text-light);margin-top:0.5rem">* Precios incluyen IVA · Método de pago: Contra entrega</p>
+        </div>
+
+        <!-- COMPARTIR -->
+        <div class="share-section no-print">
+          <p>¿Te encantó tu pedido? ¡Compártelo!</p>
+          <div style="display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-secondary btn-sm" onclick="shareBoleta('whatsapp')">💬 WhatsApp</button>
+            <button class="btn btn-secondary btn-sm" onclick="shareBoleta('facebook')">📘 Facebook</button>
+            <button class="btn btn-secondary btn-sm" onclick="shareBoleta('twitter')">🐦 Twitter/X</button>
+            <button class="btn btn-secondary btn-sm" onclick="shareBoleta('instagram')">📸 Instagram</button>
+          </div>
+        </div>
+
+        <!-- NOTA FINAL -->
+        <div class="boleta-footer-note">
+          🎂 Gracias por elegir Pastelería Mil Sabores<br>
+          Este documento es tu comprobante oficial de compra.<br>
+          Guárdalo para cualquier consulta o reclamo.<br>
+          <strong>hola@milsabores.cl · +56 2 2345 6789</strong>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer no-print">
+    <div class="footer-bottom"><p>© 2024 Pastelería Mil Sabores. Todos los derechos reservados.</p></div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const user = getUser();
+      if (!user) { window.location.href = 'login.html'; return; }
+
+      // Obtener pedido: desde URL param o el más reciente
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get('order');
+      const orders = user.orders || [];
+      const order = orderId ? orders.find(o => o.id === orderId) : orders[0];
+
+      if (!order) {
+        document.querySelector('.container').innerHTML = `
+          <div class="empty-state" style="padding:4rem">
+            <div class="empty-state-icon">🧾</div>
+            <h3>Sin boleta disponible</h3>
+            <p>Aún no tienes pedidos. Realiza tu primer pedido desde el catálogo.</p>
+            <a href="catalogo.html" class="btn btn-primary" style="margin-top:1rem">Ir al Catálogo</a>
+          </div>`;
+        return;
+      }
+
+      renderBoleta(order, user);
+    });
+
+    function renderBoleta(order, user) {
+      // Número boleta
+      document.getElementById('boletaNum').textContent = 'Boleta N° ' + order.id;
+
+      // Cliente
+      document.getElementById('clienteNombre').textContent = user.name;
+      document.getElementById('clienteEmail').textContent = user.email;
+      document.getElementById('clienteTel').textContent = user.phone || '—';
+      document.getElementById('fechaPedido').textContent = new Date(order.createdAt).toLocaleDateString('es-CL', { year:'numeric', month:'long', day:'numeric' });
+
+      // Entrega
+      document.getElementById('entregaDireccion').textContent = order.deliveryAddress || '—';
+      document.getElementById('entregaFecha').textContent = order.deliveryDate ? new Date(order.deliveryDate + 'T12:00:00').toLocaleDateString('es-CL', { weekday:'long', year:'numeric', month:'long', day:'numeric' }) : '—';
+      document.getElementById('entregaHorario').textContent = order.deliveryTime || '—';
+
+      const statusLabels = { preparando: '🍳 Preparando pedido', enviado: '🚚 En despacho', entregado: '✅ Entregado' };
+      document.getElementById('entregaEstado').textContent = statusLabels[order.status] || '—';
+
+      // Timeline
+      updateTimeline(order.status);
+
+      // Productos
+      const tbody = document.getElementById('productsTableBody');
+      tbody.innerHTML = order.items.map(item => {
+        const prod = products.find(p => p.id === item.id);
+        const price = prod ? prod.price : (item.price || 0);
+        const subtotal = price * item.qty;
+        return `
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:0.5rem">
+                <span style="font-size:1.4rem">${item.emoji || '🎂'}</span>
+                <div>
+                  <div style="font-weight:700">${item.name}</div>
+                  ${item.message ? `<div style="font-size:0.78rem;color:var(--text-light);font-style:italic">💬 "${item.message}"</div>` : ''}
+                </div>
+              </div>
+            </td>
+            <td style="text-align:center;font-weight:700">${item.qty}</td>
+            <td style="text-align:right">${formatPrice(price)}</td>
+            <td style="text-align:right;font-weight:700;color:var(--chocolate)">${formatPrice(subtotal)}</td>
+          </tr>`;
+      }).join('');
+
+      // Totales
+      const subtotal = order.total + (order.discount || 0);
+      const iva = Math.round(order.total * 0.19);
+      document.getElementById('totalSubtotal').textContent = formatPrice(subtotal);
+      document.getElementById('totalIva').textContent = formatPrice(iva);
+      document.getElementById('totalFinal').textContent = formatPrice(order.total);
+
+      if (order.discount > 0) {
+        document.getElementById('totalDescuentoRow').style.display = 'flex';
+        document.getElementById('totalDescuentoRow').classList.add('discount');
+        document.getElementById('totalDescuento').textContent = '−' + formatPrice(order.discount);
+        const discLabel = user.birthYear && (new Date().getFullYear() - user.birthYear >= 50)
+          ? 'Descuento 50% (+50 años)' : 'Descuento 10% (FELICES50)';
+        document.getElementById('totalDescuentoLabel').textContent = discLabel;
+      }
+    }
+
+    function updateTimeline(status) {
+      const steps = { preparando: 1, listo: 2, enviado: 3, entregado: 4 };
+      const currentStep = steps[status] ?? 1;
+      const msgs = {
+        preparando: '👨‍🍳 Tu pedido está siendo preparado con cariño en nuestra pastelería.',
+        listo: '📦 Tu pedido está listo y esperando al repartidor.',
+        enviado: '🚚 Tu pedido está en camino. ¡Pronto llegará!',
+        entregado: '✅ ¡Pedido entregado! Esperamos que lo disfrutes mucho.'
+      };
+      const progressMap = { preparando: '25%', listo: '50%', enviado: '75%', entregado: '100%' };
+      document.getElementById('timeline').style.setProperty('--progress', progressMap[status] || '15%');
+      document.getElementById('statusMsg').textContent = msgs[status] || msgs.preparando;
+
+      // Marcar pasos
+      for (let i = 2; i <= 5; i++) {
+        const circle = document.getElementById('step' + i);
+        const label = document.getElementById('label' + i);
+        if (i - 1 <= currentStep) {
+          circle.classList.add(i - 1 < currentStep ? 'done' : 'current');
+          if (i - 1 < currentStep) circle.innerHTML = '✓';
+          if (label) label.classList.add('active');
+        }
+      }
+    }
+
+    function shareBoleta(network) {
+      const user = getUser();
+      const orders = user?.orders || [];
+      const order = orders[0];
+      const text = order
+        ? `🎂 ¡Acabo de pedir en Pastelería Mil Sabores! Pedido ${order.id} por ${formatPrice(order.total)} 🎉`
+        : '🎂 ¡Hice un pedido en Pastelería Mil Sabores!';
+      const url = 'https://milsabores.cl';
+      const shareUrls = {
+        whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`,
+        twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+      };
+      if (network === 'instagram') {
+        navigator.clipboard.writeText(text + ' ' + url).then(() => showToast('📋 ¡Copiado! Pégalo en Instagram'));
+      } else if (shareUrls[network]) {
+        window.open(shareUrls[network], '_blank', 'width=600,height=400');
+      }
+    }
+
+    function downloadBoleta() {
+      window.print();
+    }
+  </script>
+</body>
+</html>

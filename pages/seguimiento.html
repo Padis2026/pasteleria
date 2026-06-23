@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguimiento de Pedido | Pastelería Mil Sabores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="icon" type="image/jpeg" href="../assets/favicon.jpg" />
+  <style>
+    .tracking-card {
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: 0 8px 32px var(--shadow);
+      overflow: hidden;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .tracking-card-header {
+      background: linear-gradient(135deg, var(--chocolate), #a0522d);
+      color: white;
+      padding: 2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .tracking-card-header h2 {
+      font-family: 'Pacifico', cursive;
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .tracking-card-header p { opacity: 0.85; font-size: 0.88rem; }
+
+    .status-pill {
+      display: inline-block;
+      padding: 0.4rem 1.2rem;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .status-preparando { background: #fff3e0; color: #e65100; }
+    .status-listo      { background: #e3f2fd; color: #1565c0; }
+    .status-enviado    { background: #ede7f6; color: #4527a0; }
+    .status-entregado  { background: #e8f5e9; color: #2e7d32; }
+
+    .tracking-body { padding: 2rem 2.5rem; }
+
+    /* Timeline vertical */
+    .v-timeline { position: relative; padding-left: 60px; }
+    .v-timeline::before {
+      content: '';
+      position: absolute;
+      left: 23px;
+      top: 10px;
+      bottom: 10px;
+      width: 4px;
+      background: var(--border);
+      border-radius: 2px;
+    }
+
+    .v-step {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    .v-step:last-child { margin-bottom: 0; }
+
+    .v-dot {
+      position: absolute;
+      left: -48px;
+      top: 4px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      border: 4px solid var(--border);
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      z-index: 1;
+      transition: all 0.4s;
+    }
+
+    .v-dot.done {
+      border-color: var(--chocolate);
+      background: var(--chocolate);
+      color: white;
+    }
+
+    .v-dot.current {
+      border-color: var(--chocolate);
+      background: var(--rosa);
+      animation: glow 1.6s ease-in-out infinite;
+    }
+
+    .v-dot.pending { opacity: 0.35; }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(139,69,19,0.35); }
+      50%       { box-shadow: 0 0 0 10px rgba(139,69,19,0); }
+    }
+
+    /* Progress bar on timeline line */
+    .v-timeline .progress-line {
+      position: absolute;
+      left: -37px;
+      top: 10px;
+      width: 4px;
+      background: var(--chocolate);
+      border-radius: 2px;
+      transition: height 0.6s ease;
+    }
+
+    .v-step-title {
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--text-dark);
+      margin-bottom: 0.2rem;
+    }
+    .v-step-title.active { color: var(--chocolate); }
+    .v-step-desc { font-size: 0.87rem; color: var(--text-light); line-height: 1.5; }
+    .v-step-time { font-size: 0.78rem; color: var(--chocolate); font-weight: 700; margin-top: 0.3rem; }
+
+    .eta-box {
+      background: linear-gradient(135deg, #fff8f0, var(--bg-cream));
+      border: 2px solid var(--rosa);
+      border-radius: 16px;
+      padding: 1.2rem 1.5rem;
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .eta-icon { font-size: 2.5rem; flex-shrink: 0; }
+    .eta-label { font-size: 0.8rem; color: var(--text-light); }
+    .eta-value { font-family: 'Pacifico', cursive; color: var(--chocolate); font-size: 1.2rem; }
+
+    .search-order-box {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 16px var(--shadow);
+      max-width: 480px;
+      margin: 0 auto 2rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-logo">🎂</span>
+      <a href="../index.html" class="brand-name">Mil Sabores</a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Inicio</a></li>
+      <li><a href="catalogo.html">Catálogo</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="carrito.html">🛒 Carrito <span class="cart-badge" id="cartBadge">0</span></a></li>
+      <li><a href="seguimiento.html" class="active">📦 Seguimiento</a></li>
+      <li><a href="login.html" id="navAuthLink">Iniciar Sesión</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  </nav>
+
+  <div class="page-header">
+    <h1>📦 Seguimiento de Pedido</h1>
+    <p>Conoce el estado de tu pedido en tiempo real</p>
+  </div>
+
+  <div class="container" style="padding: 2.5rem 2rem 5rem">
+
+    <!-- BUSCAR PEDIDO -->
+    <div class="search-order-box">
+      <div style="font-size:3rem;margin-bottom:0.8rem">🔍</div>
+      <h3 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:0.5rem">Buscar pedido</h3>
+      <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:1.2rem">
+        Ingresa el número de tu pedido o tu correo electrónico
+      </p>
+      <div class="form-group">
+        <input type="text" id="searchOrderInput" placeholder="Ej: MS-1234567890 o tu@email.com"
+               style="text-align:center" onkeydown="if(event.key==='Enter') buscarPedido()" />
+      </div>
+      <button class="btn btn-primary btn-block" onclick="buscarPedido()">Buscar pedido</button>
+      <div id="searchError" style="display:none;color:var(--error);font-size:0.85rem;margin-top:0.8rem;font-weight:700"></div>
+    </div>
+
+    <!-- RESULTADO SEGUIMIENTO -->
+    <div id="trackingResult" style="display:none"></div>
+
+    <!-- SI HAY SESIÓN: MOSTRAR PEDIDOS AUTOMÁTICAMENTE -->
+    <div id="myOrders" style="display:none">
+      <h3 style="font-family:'Pacifico',cursive;color:var(--chocolate);text-align:center;margin-bottom:1.5rem">
+        Mis pedidos recientes
+      </h3>
+      <div id="myOrdersList"></div>
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h4 class="footer-brand">🎂 Mil Sabores</h4>
+        <p>Celebrando 50 años de dulzura artesanal en Chile.</p>
+      </div>
+      <div>
+        <h5>Navegación</h5>
+        <ul>
+          <li><a href="../index.html">Inicio</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="seguimiento.html">Seguimiento</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Mi Cuenta</h5>
+        <ul>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+          <li><a href="registro.html">Registrarse</a></li>
+          <li><a href="perfil.html">Mi Perfil</a></li>
+          <li><a href="boleta.html">Mi Boleta</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contacto</h5>
+        <p>📍 Santiago, Chile</p>
+        <p>📞 +56 2 2345 6789</p>
+        <p>✉️ hola@milsabores.cl</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Pastelería Mil Sabores. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    const STEPS = [
+      { key: 'recibido',   icon: '✅', label: 'Pedido recibido',       desc: 'Tu pedido fue registrado exitosamente en nuestro sistema.' },
+      { key: 'preparando', icon: '👨‍🍳', label: 'Preparando',           desc: 'Nuestros reposteros están preparando tu pedido con amor y dedicación.' },
+      { key: 'listo',      icon: '📦', label: 'Listo para despacho',   desc: 'Tu pedido está terminado y esperando al repartidor.' },
+      { key: 'enviado',    icon: '🚚', label: 'En despacho',           desc: 'Tu pedido está en camino. ¡Ya casi llega!' },
+      { key: 'entregado',  icon: '🏠', label: 'Entregado',             desc: '¡Tu pedido fue entregado! Esperamos que lo disfrutes muchísimo 🎉' },
+    ];
+
+    const STATUS_ORDER = ['recibido','preparando','listo','enviado','entregado'];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Chequear parámetro URL
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get('order');
+      if (orderId) {
+        document.getElementById('searchOrderInput').value = orderId;
+        buscarPedido();
+      }
+
+      // Si hay usuario, mostrar sus pedidos
+      const user = getUser();
+      if (user && user.orders && user.orders.length > 0) {
+        document.getElementById('myOrders').style.display = 'block';
+        renderMyOrders(user);
+      }
+    });
+
+    function buscarPedido() {
+      const query = document.getElementById('searchOrderInput').value.trim();
+      const errEl = document.getElementById('searchError');
+      errEl.style.display = 'none';
+
+      if (!query) {
+        errEl.style.display = 'block';
+        errEl.textContent = 'Ingresa un número de pedido o correo electrónico.';
+        return;
+      }
+
+      // Buscar en localStorage (todos los usuarios)
+      const users = JSON.parse(localStorage.getItem('ms_users') || '[]');
+      let foundOrder = null;
+      let foundUser = null;
+
+      for (const u of users) {
+        if (!u.orders) continue;
+        // Buscar por ID o por email
+        const order = u.orders.find(o =>
+          o.id.toLowerCase() === query.toLowerCase() ||
+          u.email.toLowerCase() === query.toLowerCase()
+        );
+        if (order) { foundOrder = order; foundUser = u; break; }
+      }
+
+      // También buscar en usuario actual (sin estar en la lista completa)
+      if (!foundOrder) {
+        const user = getUser();
+        if (user && user.orders) {
+          const order = user.orders.find(o =>
+            o.id.toLowerCase() === query.toLowerCase() ||
+            user.email.toLowerCase() === query.toLowerCase()
+          );
+          if (order) { foundOrder = order; foundUser = user; }
+        }
+      }
+
+      if (!foundOrder) {
+        errEl.style.display = 'block';
+        errEl.textContent = '❌ No encontramos ningún pedido con ese dato. Verifica el número o correo.';
+        document.getElementById('trackingResult').style.display = 'none';
+        return;
+      }
+
+      renderTracking(foundOrder, foundUser);
+    }
+
+    function renderTracking(order, user) {
+      const currentIdx = STATUS_ORDER.indexOf(order.status);
+      const effectiveIdx = currentIdx < 0 ? 1 : currentIdx;
+
+      // Calcular altura del progress line
+      const progressPct = (effectiveIdx / (STEPS.length - 1)) * 100;
+
+      const stepsHtml = STEPS.map((step, i) => {
+        let dotClass = 'pending';
+        if (i < effectiveIdx) dotClass = 'done';
+        else if (i === effectiveIdx) dotClass = 'current';
+        const isActive = i <= effectiveIdx;
+
+        let timeText = '';
+        if (i === 0) timeText = new Date(order.createdAt).toLocaleString('es-CL', { dateStyle:'medium', timeStyle:'short' });
+        else if (i < effectiveIdx) timeText = 'Completado ✓';
+        else if (i === effectiveIdx) timeText = 'En proceso ahora...';
+
+        return `
+          <div class="v-step">
+            <div class="v-dot ${dotClass}">${dotClass === 'done' ? '✓' : step.icon}</div>
+            <div class="v-step-title ${isActive ? 'active' : ''}">${step.label}</div>
+            <div class="v-step-desc">${step.desc}</div>
+            ${timeText ? `<div class="v-step-time">${timeText}</div>` : ''}
+          </div>`;
+      }).join('');
+
+      const statusMap = {
+        preparando: { label: '🍳 Preparando', cls: 'status-preparando' },
+        listo:      { label: '📦 Listo',       cls: 'status-listo' },
+        enviado:    { label: '🚚 En despacho', cls: 'status-enviado' },
+        entregado:  { label: '✅ Entregado',   cls: 'status-entregado' },
+      };
+      const st = statusMap[order.status] || statusMap.preparando;
+
+      const etaText = order.status === 'entregado'
+        ? '¡Tu pedido fue entregado! 🎉'
+        : `Entrega estimada: ${order.deliveryDate ? new Date(order.deliveryDate+'T12:00:00').toLocaleDateString('es-CL',{weekday:'long',day:'numeric',month:'long'}) : '—'} entre ${order.deliveryTime || '—'}`;
+
+      const html = `
+        <div class="tracking-card">
+          <div class="tracking-card-header">
+            <div>
+              <h2>Pedido ${order.id}</h2>
+              <p>Cliente: ${user ? user.name : '—'}</p>
+              <p>📍 ${order.deliveryAddress}</p>
+            </div>
+            <span class="status-pill ${st.cls}">${st.label}</span>
+          </div>
+
+          <div class="tracking-body">
+
+            <!-- RESUMEN PRODUCTOS -->
+            <div style="background:var(--bg-cream);border-radius:12px;padding:1rem 1.2rem;margin-bottom:2rem;font-size:0.88rem">
+              <strong style="color:var(--chocolate)">🛍️ Productos:</strong>
+              <span style="margin-left:0.5rem">${order.items.map(i=>`${i.emoji||'🎂'} ${i.name} ×${i.qty}`).join(' · ')}</span>
+              <div style="margin-top:0.4rem"><strong>💰 Total:</strong> ${formatPrice(order.total)}</div>
+            </div>
+
+            <!-- TIMELINE -->
+            <h3 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:1.5rem;font-size:1.1rem">
+              Estado del pedido
+            </h3>
+            <div class="v-timeline" style="position:relative">
+              <div class="progress-line" style="height:calc(${progressPct}% - 20px)"></div>
+              ${stepsHtml}
+            </div>
+
+            <!-- ETA -->
+            <div class="eta-box">
+              <div class="eta-icon">${order.status === 'entregado' ? '🎉' : '🚚'}</div>
+              <div>
+                <div class="eta-label">Información de entrega</div>
+                <div class="eta-value">${etaText}</div>
+                ${order.deliveryNotes ? `<div style="font-size:0.8rem;color:var(--text-light);margin-top:0.3rem">📝 ${order.deliveryNotes}</div>` : ''}
+              </div>
+            </div>
+
+            <!-- ACCIONES -->
+            <div style="display:flex;gap:0.8rem;margin-top:1.5rem;flex-wrap:wrap">
+              <a href="boleta.html?order=${order.id}" class="btn btn-primary btn-sm">🧾 Ver Boleta</a>
+              <a href="perfil.html" class="btn btn-secondary btn-sm">👤 Mi Perfil</a>
+              <button class="btn btn-outline btn-sm" onclick="shareTracking('${order.id}')">📤 Compartir</button>
+            </div>
+
+            <!-- COMPARTIR REDES -->
+            <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+              <span style="font-size:0.8rem;color:var(--text-light)">Compartir en:</span>
+              <button class="btn btn-outline btn-sm" onclick="shareNet('${order.id}','whatsapp')">💬 WhatsApp</button>
+              <button class="btn btn-outline btn-sm" onclick="shareNet('${order.id}','facebook')">📘 Facebook</button>
+              <button class="btn btn-outline btn-sm" onclick="shareNet('${order.id}','twitter')">🐦 Twitter/X</button>
+              <button class="btn btn-outline btn-sm" onclick="shareNet('${order.id}','instagram')">📸 Instagram</button>
+            </div>
+          </div>
+        </div>`;
+
+      const result = document.getElementById('trackingResult');
+      result.innerHTML = html;
+      result.style.display = 'block';
+      result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderMyOrders(user) {
+      const list = document.getElementById('myOrdersList');
+      list.innerHTML = user.orders.slice(0, 3).map(order => {
+        const statusMap = {
+          preparando: { label: '🍳 Preparando', cls: 'status-preparando' },
+          listo:      { label: '📦 Listo',       cls: 'status-listo' },
+          enviado:    { label: '🚚 En despacho', cls: 'status-enviado' },
+          entregado:  { label: '✅ Entregado',   cls: 'status-entregado' },
+        };
+        const st = statusMap[order.status] || statusMap.preparando;
+        return `
+          <div style="background:var(--white);border-radius:16px;padding:1.2rem 1.5rem;box-shadow:0 2px 8px var(--shadow);margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.8rem">
+            <div>
+              <div style="font-family:'Pacifico',cursive;color:var(--chocolate)">${order.id}</div>
+              <div style="font-size:0.83rem;color:var(--text-light)">${order.items.map(i=>i.emoji+''+i.name).join(', ')}</div>
+              <div style="font-size:0.82rem;margin-top:0.3rem"><strong>${formatPrice(order.total)}</strong> · 📅 Entrega: ${order.deliveryDate}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end">
+              <span class="order-status ${st.cls}">${st.label}</span>
+              <button class="btn btn-secondary btn-sm" onclick="verSeguimiento('${order.id}')">Ver seguimiento</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function verSeguimiento(orderId) {
+      document.getElementById('searchOrderInput').value = orderId;
+      buscarPedido();
+    }
+
+    function shareTracking(orderId) {
+      const text = '📦 Seguimiento de mi pedido ' + orderId + ' en Pastelería Mil Sabores 🎂';
+      const url = window.location.origin + window.location.pathname + '?order=' + orderId;
+      if (navigator.share) navigator.share({ title: 'Mi pedido Mil Sabores', text, url });
+      else navigator.clipboard.writeText(url).then(() => showToast('📋 Link copiado'));
+    }
+
+    function shareNet(orderId, network) {
+      const text = '📦 ¡Pedí en Pastelería Mil Sabores! Mira el seguimiento de mi pedido ' + orderId + ' 🎂';
+      const url = 'https://milsabores.cl/seguimiento?order=' + orderId;
+      const urls = {
+        whatsapp: 'https://wa.me/?text='+encodeURIComponent(text+' '+url),
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),
+        twitter:  'https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),
+      };
+      if (network === 'instagram') navigator.clipboard.writeText(text+' '+url).then(()=>showToast('📋 Copiado para Instagram'));
+      else window.open(urls[network], '_blank', 'width=600,height=400');
+    }
+  </script>
+</body>
+</html>

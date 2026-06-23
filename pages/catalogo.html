@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo | Pastelería Mil Sabores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <link rel="icon" type="image/jpeg" href="../assets/favicon.jpg" />
+  <style>
+    .advanced-filters {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+    }
+    .filter-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+    .filter-row:last-child { margin-bottom: 0; }
+    .filter-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-light);
+      min-width: 80px;
+    }
+    .price-range { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; }
+    .price-range input[type=range] { width: 120px; accent-color: var(--chocolate); }
+    .results-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 2rem;
+      background: var(--bg-cream);
+      font-size: 0.85rem;
+      color: var(--text-light);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .share-bar {
+      background: var(--chocolate);
+      padding: 0.7rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .share-bar span { color: white; font-size: 0.85rem; font-weight: 700; }
+    .share-bar button {
+      padding: 0.3rem 0.9rem;
+      border-radius: 20px;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.12);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      transition: background 0.2s;
+    }
+    .share-bar button:hover { background: rgba(255,255,255,0.25); }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-logo">🎂</span>
+      <a href="../index.html" class="brand-name">Mil Sabores</a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Inicio</a></li>
+      <li><a href="catalogo.html" class="active">Catálogo</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="seguimiento.html">📦 Seguimiento</a></li>
+      <li><a href="carrito.html">🛒 Carrito <span class="cart-badge" id="cartBadge">0</span></a></li>
+      <li><a href="login.html" id="navAuthLink">Iniciar Sesión</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  </nav>
+
+  <div class="page-header">
+    <h1>🍰 Catálogo</h1>
+    <p>Todos nuestros productos artesanales, hechos con amor</p>
+  </div>
+
+  <!-- BANNER DESCUENTO -->
+  <div id="discountBanner" style="display:none"></div>
+
+  <!-- BARRA COMPARTIR -->
+  <div class="share-bar">
+    <span>Comparte nuestros productos:</span>
+    <button onclick="shareNet('whatsapp')">💬 WhatsApp</button>
+    <button onclick="shareNet('facebook')">📘 Facebook</button>
+    <button onclick="shareNet('twitter')">🐦 Twitter/X</button>
+    <button onclick="shareNet('instagram')">📸 Instagram</button>
+  </div>
+
+  <!-- FILTROS AVANZADOS -->
+  <div class="advanced-filters">
+    <!-- Búsqueda -->
+    <div class="filter-row">
+      <span class="filter-label">Buscar</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="🔍 Nombre, descripción, categoría..." oninput="filterProducts()" style="flex:1;max-width:400px" />
+    </div>
+
+    <!-- Categorías -->
+    <div class="filter-row">
+      <span class="filter-label">Categoría</span>
+      <div id="categoryFilters" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
+    </div>
+
+    <!-- Precio y orden -->
+    <div class="filter-row">
+      <span class="filter-label">Precio máx.</span>
+      <div class="price-range">
+        <input type="range" id="priceRange" min="3000" max="60000" step="1000" value="60000" oninput="updatePriceLabel(); filterProducts()" />
+        <span id="priceLabel" style="font-weight:700;color:var(--chocolate);min-width:100px">$60.000 CLP</span>
+      </div>
+      <span class="filter-label" style="margin-left:1rem">Ordenar</span>
+      <select id="sortSelect" onchange="filterProducts()" style="padding:0.4rem 0.8rem;border-radius:8px;border:2px solid var(--border);font-family:'Lato',sans-serif;font-size:0.85rem;background:white">
+        <option value="default">Por defecto</option>
+        <option value="price-asc">Precio: menor a mayor</option>
+        <option value="price-desc">Precio: mayor a menor</option>
+        <option value="name-asc">Nombre A–Z</option>
+        <option value="custom">Personalizables primero</option>
+      </select>
+    </div>
+
+    <!-- Filtros especiales -->
+    <div class="filter-row">
+      <span class="filter-label">Especiales</span>
+      <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.88rem;cursor:pointer">
+        <input type="checkbox" id="filterCustom" onchange="filterProducts()" /> Solo personalizables
+      </label>
+      <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.88rem;cursor:pointer">
+        <input type="checkbox" id="filterHealthy" onchange="filterProducts()" /> Opciones saludables (sin azúcar / sin gluten / vegano)
+      </label>
+      <button class="filter-btn" onclick="clearFilters()" style="margin-left:auto">✕ Limpiar filtros</button>
+    </div>
+  </div>
+
+  <!-- BARRA RESULTADOS -->
+  <div class="results-bar">
+    <span id="resultsCount">Mostrando todos los productos</span>
+    <span id="discountNote"></span>
+  </div>
+
+  <!-- GRID -->
+  <div class="container" style="padding: 1.5rem 2rem 4rem">
+    <div id="productsGrid" class="products-grid"></div>
+    <div id="emptyState" class="empty-state" style="display:none">
+      <div class="empty-state-icon">🔍</div>
+      <h3>Sin resultados</h3>
+      <p>No encontramos productos con ese criterio. Prueba ajustando los filtros.</p>
+      <button class="btn btn-secondary" onclick="clearFilters()" style="margin-top:1rem">Limpiar filtros</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h4 class="footer-brand">🎂 Mil Sabores</h4>
+        <p>Celebrando 50 años de dulzura artesanal.</p>
+      </div>
+      <div>
+        <h5>Navegar</h5>
+        <ul>
+          <li><a href="../index.html">Inicio</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Mi Cuenta</h5>
+        <ul>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+          <li><a href="registro.html">Registrarse</a></li>
+          <li><a href="perfil.html">Mi Perfil</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contacto</h5>
+        <p>📍 Santiago, Chile</p>
+        <p>📞 +56 2 2345 6789</p>
+        <p>✉️ hola@milsabores.cl</p>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>© 2024 Pastelería Mil Sabores.</p></div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    let activeCategory = 'all';
+
+    const healthyCats = ['sin-azucar', 'sin-gluten', 'vegana'];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('cat');
+      if (catParam) activeCategory = catParam;
+      renderCategoryFilters();
+      filterProducts();
+      renderDiscountBanner();
+    });
+
+    function renderCategoryFilters() {
+  const categoryImages = {
+    'all': '../assets/torta-cumpleanos.jpg',
+    'tortas-cuadradas': '../assets/torta-cuadrada-chocolate.jpg',
+    'tortas-circulares': '../assets/torta-circular-vainilla.jpg',
+    'postres-individuales': '../assets/mousse-chocolate.jpg',
+    'sin-azucar': '../assets/cheesecake-sin-azucar.jpg',
+    'tradicional': '../assets/tarta-santiago.jpg',
+    'sin-gluten': '../assets/brownie-sin-gluten.jpg',
+    'vegana': '../assets/torta-vegana-chocolate.jpg',
+    'especiales': '../assets/torta-boda.jpg'
+  };
+
+  document.getElementById('categoryFilters').innerHTML = categories.map(cat =>
+    `<button class="category-card-filter ${cat.id === activeCategory ? 'active' : ''}" onclick="setCategory('${cat.id}')">
+      <img src="${categoryImages[cat.id]}" alt="${cat.label}">
+      <span>${cat.label}</span>
+    </button>`
+  ).join('');
+}
+
+    function setCategory(catId) {
+      activeCategory = catId;
+      renderCategoryFilters();
+      filterProducts();
+    }
+
+    function updatePriceLabel() {
+      const val = parseInt(document.getElementById('priceRange').value);
+      document.getElementById('priceLabel').textContent = '$' + val.toLocaleString('es-CL') + ' CLP';
+    }
+
+    function clearFilters() {
+      activeCategory = 'all';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('priceRange').value = 60000;
+      document.getElementById('sortSelect').value = 'default';
+      document.getElementById('filterCustom').checked = false;
+      document.getElementById('filterHealthy').checked = false;
+      updatePriceLabel();
+      renderCategoryFilters();
+      filterProducts();
+    }
+
+    function filterProducts() {
+      const query = document.getElementById('searchInput').value.toLowerCase().trim();
+      const maxPrice = parseInt(document.getElementById('priceRange').value);
+      const sort = document.getElementById('sortSelect').value;
+      const onlyCustom = document.getElementById('filterCustom').checked;
+      const onlyHealthy = document.getElementById('filterHealthy').checked;
+      const user = getUser();
+      const discountPct = getUserDiscountPct(user);
+
+      let filtered = [...products];
+
+      if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
+      if (query) filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        p.desc.toLowerCase().includes(query) ||
+        p.catLabel.toLowerCase().includes(query)
+      );
+      filtered = filtered.filter(p => p.price <= maxPrice);
+      if (onlyCustom) filtered = filtered.filter(p => p.customizable);
+      if (onlyHealthy) filtered = filtered.filter(p => healthyCats.includes(p.category));
+
+      // Ordenar
+      if (sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+      else if (sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
+      else if (sort === 'name-asc') filtered.sort((a,b) => a.name.localeCompare(b.name));
+      else if (sort === 'custom') filtered.sort((a,b) => (b.customizable?1:0) - (a.customizable?1:0));
+
+      const grid = document.getElementById('productsGrid');
+      const empty = document.getElementById('emptyState');
+      const count = document.getElementById('resultsCount');
+
+      count.textContent = filtered.length === 0 ? 'Sin resultados' :
+        `Mostrando ${filtered.length} producto${filtered.length !== 1 ? 's' : ''}`;
+
+      const discNote = document.getElementById('discountNote');
+      discNote.textContent = discountPct > 0 ? `🏷️ Descuento del ${discountPct}% aplicado` : '';
+      discNote.style.color = 'var(--chocolate)';
+      discNote.style.fontWeight = '700';
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+      } else {
+        empty.style.display = 'none';
+        grid.innerHTML = filtered.map(p => renderProductCard(p, discountPct)).join('');
+      }
+    }
+
+    function getUserDiscountPct(user) {
+      if (!user) return 0;
+      if (user.birthYear && (new Date().getFullYear() - user.birthYear >= 50)) return 50;
+      if (user.codigoFelices50) return 10;
+      return 0;
+    }
+
+    function renderDiscountBanner() {
+      const user = getUser();
+      if (!user) return;
+      const pct = getUserDiscountPct(user);
+      const banner = document.getElementById('discountBanner');
+      let msg = '';
+      if (isINACAPBirthday(user)) {
+        banner.style.cssText = 'display:block;background:var(--rosa);color:var(--chocolate);text-align:center;padding:0.9rem;font-weight:700;';
+        msg = `🎂 ¡Feliz Cumpleaños ${user.name.split(' ')[0]}! Tu torta especial de cumpleaños es GRATIS hoy 🎉`;
+      } else if (pct > 0) {
+        banner.style.cssText = 'display:block;background:var(--chocolate);color:white;text-align:center;padding:0.9rem;font-weight:700;';
+        msg = `🎉 ¡Hola ${user.name.split(' ')[0]}! Tienes un ${pct}% de descuento activo en todos los productos`;
+      }
+      banner.textContent = msg;
+    }
+
+    function shareNet(network) {
+      const text = '🎂 ¡Descubre los deliciosos productos artesanales de Pastelería Mil Sabores! Tortas, postres y más con 50 años de tradición.';
+      const url = 'https://milsabores.cl/catalogo';
+      const urls = {
+        whatsapp: 'https://wa.me/?text='+encodeURIComponent(text+' '+url),
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url)+'&quote='+encodeURIComponent(text),
+        twitter: 'https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),
+      };
+      if (network === 'instagram') {
+        navigator.clipboard.writeText(text+' '+url).then(() => showToast('📋 Link copiado — pégalo en tu historia de Instagram'));
+      } else {
+        window.open(urls[network], '_blank', 'width=600,height=400');
+      }
+    }
+  </script>
+</body>
+</html>
