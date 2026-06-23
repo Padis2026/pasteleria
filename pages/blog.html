@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog y Comunidad | Pastelería Mil Sabores</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/styles.css" />
+  <style>
+    .article-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px var(--shadow);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .article-card:hover { transform: translateY(-5px); }
+    .article-thumb {
+      background: linear-gradient(135deg, #ffe4f0, var(--bg-cream));
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    .article-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
+    .article-meta { font-size: 0.78rem; color: var(--text-light); margin-bottom: 0.5rem; display: flex; gap: 0.8rem; flex-wrap: wrap; }
+    .article-meta span { display: flex; align-items: center; gap: 0.2rem; }
+    .article-title { font-weight: 900; font-size: 1.05rem; color: var(--text-dark); margin-bottom: 0.5rem; line-height: 1.3; }
+    .article-excerpt { font-size: 0.88rem; color: var(--text-dark); opacity: 0.8; flex: 1; margin-bottom: 1rem; }
+    .article-tag {
+      display: inline-block;
+      background: var(--rosa);
+      color: var(--chocolate);
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: 20px;
+      padding: 0.2rem 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+    .article-author {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--text-light);
+      margin-top: auto;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+    .author-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--rosa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+    }
+    .author-name { font-weight: 700; color: var(--text-dark); }
+
+    .tags-bar { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2rem; }
+    .tag-filter {
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      border: 2px solid var(--border);
+      background: transparent;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: all 0.2s;
+    }
+    .tag-filter:hover, .tag-filter.active { background: var(--rosa); border-color: var(--rosa); color: var(--chocolate); }
+
+    .featured-article {
+      background: linear-gradient(135deg, var(--chocolate), #a0522d);
+      color: white;
+      border-radius: 24px;
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      gap: 2rem;
+      align-items: center;
+      margin-bottom: 3rem;
+    }
+    .featured-article h2 { font-family: 'Pacifico', cursive; font-size: 1.8rem; margin-bottom: 0.8rem; }
+    .featured-article p { opacity: 0.9; font-size: 0.95rem; margin-bottom: 1.2rem; }
+    .featured-emoji { font-size: 8rem; text-align: center; }
+
+    .newsletter-box {
+      background: var(--rosa);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    .newsletter-box h3 { font-family: 'Pacifico', cursive; color: var(--chocolate); font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .newsletter-box p { color: var(--chocolate); opacity: 0.85; margin-bottom: 1.2rem; }
+    .newsletter-form { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+    .newsletter-input {
+      padding: 0.7rem 1.2rem;
+      border-radius: 50px;
+      border: 2px solid var(--chocolate);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.95rem;
+      min-width: 240px;
+      outline: none;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-logo">🎂</span>
+      <a href="../index.html" class="brand-name">Mil Sabores</a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="../index.html">Inicio</a></li>
+      <li><a href="catalogo.html">Catálogo</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="seguimiento.html">📦 Seguimiento</a></li>
+      <li><a href="carrito.html">🛒 Carrito <span class="cart-badge" id="cartBadge">0</span></a></li>
+      <li><a href="login.html" id="navAuthLink">Iniciar Sesión</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">☰</button>
+  </nav>
+
+  <div class="page-header">
+    <h1>📖 Blog & Comunidad</h1>
+    <p>Recetas, tips y noticias de nuestros estudiantes Duoc y expertos en repostería</p>
+  </div>
+
+  <div class="container" style="padding: 3rem 2rem 5rem">
+
+    <!-- ARTICULO DESTACADO -->
+    <div class="featured-article">
+      <div>
+        <span class="article-tag" style="background:rgba(255,255,255,0.2);color:white">⭐ Destacado</span>
+        <h2>La historia detrás del Récord Guinness 1995</h2>
+        <p>El relato de cómo Pastelería Mil Sabores colaboró en la creación de la torta más grande del mundo. Una historia de creatividad, trabajo en equipo y mucho, mucho chocolate.</p>
+        <button class="btn" style="background:white;color:var(--chocolate)" onclick="openArticle('guinness')">
+          Leer artículo completo →
+        </button>
+      </div>
+      <div class="featured-emoji">🏆</div>
+    </div>
+
+    <!-- FILTROS POR CATEGORÍA -->
+    <div class="tags-bar" id="tagFilters"></div>
+
+    <!-- GRID DE ARTÍCULOS -->
+    <div class="products-grid" id="articlesGrid"></div>
+
+    <!-- NEWSLETTER -->
+    <div class="newsletter-box">
+      <h3>📧 Suscríbete a nuestro blog</h3>
+      <p>Recibe recetas, tips de repostería y noticias de la comunidad Duoc directamente en tu correo.</p>
+      <div class="newsletter-form">
+        <input type="email" class="newsletter-input" placeholder="tu@correo.com" id="newsletterEmail" />
+        <button class="btn btn-primary" onclick="subscribeNewsletter()">Suscribirme</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL ARTÍCULO -->
+  <div class="modal-overlay hidden" id="articleModal">
+    <div class="modal" style="max-width:600px;max-height:85vh;overflow-y:auto">
+      <button class="modal-close" onclick="closeArticle()">✕</button>
+      <div id="articleContent"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h4 class="footer-brand">🎂 Mil Sabores</h4>
+        <p>Celebrando 50 años de dulzura artesanal en Chile.</p>
+      </div>
+      <div>
+        <h5>Navegación</h5>
+        <ul>
+          <li><a href="../index.html">Inicio</a></li>
+          <li><a href="catalogo.html">Catálogo</a></li>
+          <li><a href="blog.html">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Mi Cuenta</h5>
+        <ul>
+          <li><a href="login.html">Iniciar Sesión</a></li>
+          <li><a href="registro.html">Registrarse</a></li>
+          <li><a href="perfil.html">Mi Perfil</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contacto</h5>
+        <p>📍 Santiago, Chile</p>
+        <p>📞 +56 2 2345 6789</p>
+        <p>✉️ hola@milsabores.cl</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Pastelería Mil Sabores. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="../js/data.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    const articles = [
+      {
+        id: 'guinness',
+        tag: 'Historia',
+        emoji: '🏆',
+        title: 'La historia detrás del Récord Guinness 1995',
+        excerpt: 'Cómo nuestra pastelería colaboró en la creación de la torta más grande del mundo, una proeza que marcó la historia de la repostería chilena.',
+        author: 'Equipo Mil Sabores',
+        authorEmoji: '🎂',
+        date: '15 noviembre 2024',
+        readTime: '5 min',
+        fullContent: `
+          <h2 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:1rem">🏆 El Récord Guinness de 1995</h2>
+          <p style="margin-bottom:1rem">En 1995, Pastelería Mil Sabores fue invitada a ser parte de un proyecto sin precedentes en Chile: la colaboración para crear <strong>la torta más grande del mundo</strong>, reconocida oficialmente por el Récord Guinness World Records.</p>
+          <p style="margin-bottom:1rem">El proyecto requirió semanas de planificación, toneladas de ingredientes y el trabajo coordinado de decenas de reposteros. Nuestro equipo aportó la receta base de bizcocho y el diseño de las capas de ganache que dieron estructura a la monumental creación.</p>
+          <p style="margin-bottom:1rem">La torta final medía más de 30 metros de largo y pesaba varias toneladas. Fue un momento que unió a toda la comunidad gastronómica chilena y posicionó a nuestra pastelería como referente nacional.</p>
+          <p style="margin-bottom:1rem">Hoy, 30 años después, ese espíritu de innovación y excelencia sigue siendo el corazón de todo lo que hacemos en Mil Sabores.</p>
+          <div style="background:var(--bg-cream);border-radius:12px;padding:1.2rem;margin-top:1rem;font-style:italic;color:var(--chocolate);">
+            "Ese día entendimos que la repostería no tiene límites. Solo necesitas creatividad, trabajo en equipo y muchísimo chocolate." — Fundador, Pastelería Mil Sabores
+          </div>
+        `
+      },
+      {
+        id: 'ganache',
+        tag: 'Recetas',
+        emoji: '🍫',
+        title: 'Cómo hacer el ganache perfecto',
+        excerpt: 'Nuestros estudiantes de gastronomía Duoc comparten sus secretos para lograr un ganache suave, brillante y con sabor intenso.',
+        author: 'Camila Rojas',
+        authorEmoji: '🎓',
+        date: '8 noviembre 2024',
+        readTime: '4 min',
+        fullContent: `
+          <h2 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:1rem">🍫 El Ganache Perfecto</h2>
+          <p style="margin-bottom:0.8rem">El ganache es la base de muchas de nuestras tortas. Dominar su preparación es clave para cualquier repostero. Aquí te contamos los secretos que aprendemos en el taller de gastronomía Duoc.</p>
+          <h3 style="color:var(--chocolate);margin:1rem 0 0.5rem;font-size:1rem">Ingredientes (para una torta mediana)</h3>
+          <ul style="margin-left:1.2rem;margin-bottom:1rem;font-size:0.9rem;line-height:1.8">
+            <li>200 g de chocolate negro (70% cacao)</li>
+            <li>200 ml de crema de leche</li>
+            <li>30 g de mantequilla sin sal</li>
+            <li>1 cucharada de glucosa (opcional, para más brillo)</li>
+          </ul>
+          <h3 style="color:var(--chocolate);margin:1rem 0 0.5rem;font-size:1rem">Preparación</h3>
+          <ol style="margin-left:1.2rem;margin-bottom:1rem;font-size:0.9rem;line-height:2">
+            <li>Picar el chocolate en trozos pequeños y uniformes.</li>
+            <li>Calentar la crema hasta que hierva levemente, sin llegar a ebullición fuerte.</li>
+            <li>Verter la crema caliente sobre el chocolate picado. Esperar 1 minuto.</li>
+            <li>Revolver desde el centro hacia afuera, de forma lenta y constante.</li>
+            <li>Incorporar la mantequilla en cubos fríos y la glucosa si se usa.</li>
+            <li>Dejar enfriar a temperatura ambiente antes de aplicar.</li>
+          </ol>
+          <div style="background:#fff3e0;border-radius:12px;padding:1rem;font-size:0.88rem;margin-top:1rem">
+            <strong>💡 Tip Duoc:</strong> Si el ganache se ve cortado, agrega una cucharada de crema tibia y vuelve a mezclar lentamente. ¡Se recupera siempre!
+          </div>
+        `
+      },
+      {
+        id: 'vegano',
+        tag: 'Tips',
+        emoji: '🌱',
+        title: 'Repostería vegana sin sacrificar el sabor',
+        excerpt: 'Aprende a sustituir ingredientes de origen animal en tus recetas favoritas sin perder la textura ni el sabor que tanto amas.',
+        author: 'Ignacio Fuentes',
+        authorEmoji: '🎓',
+        date: '1 noviembre 2024',
+        readTime: '6 min',
+        fullContent: `
+          <h2 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:1rem">🌱 Repostería Vegana</h2>
+          <p style="margin-bottom:0.8rem">Cada vez más personas optan por una alimentación vegana, y la repostería no tiene que quedarse fuera. Aquí están los sustitutos más efectivos:</p>
+          <div style="display:grid;gap:0.8rem;margin-bottom:1rem">
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.9rem">
+              <strong>🥚 Huevo → </strong> 1 cda de semillas de chía o linaza + 3 cdas de agua (dejar reposar 5 min)
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.9rem">
+              <strong>🥛 Leche → </strong> Leche de almendras, avena o soya en la misma cantidad
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.9rem">
+              <strong>🧈 Mantequilla → </strong> Aceite de coco o margarina vegana (misma cantidad)
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.9rem">
+              <strong>🍯 Miel → </strong> Sirope de agave o maple en la misma cantidad
+            </div>
+          </div>
+          <p style="font-size:0.9rem">Con estos cambios simples, nuestras tortas veganas de chocolate logran la misma humedad y sabor que las tradicionales. ¡El secreto está en la calidad del chocolate!</p>
+        `
+      },
+      {
+        id: 'sin-gluten',
+        tag: 'Tips',
+        emoji: '🌾',
+        title: 'Harinas sin gluten: guía completa',
+        excerpt: 'Exploramos las mejores harinas sin gluten para repostería: cuáles usar, en qué proporciones y cómo lograr texturas perfectas.',
+        author: 'Valentina Mora',
+        authorEmoji: '🎓',
+        date: '25 octubre 2024',
+        readTime: '5 min',
+        fullContent: `
+          <h2 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:1rem">🌾 Harinas Sin Gluten</h2>
+          <p style="margin-bottom:1rem">Trabajar con harinas sin gluten requiere entender sus propiedades. Aquí una guía de las más usadas en el taller Duoc:</p>
+          <div style="display:grid;gap:0.8rem;margin-bottom:1rem">
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.88rem">
+              <strong>🌽 Harina de maíz</strong> — Ideal para texturas crocantes. Usar al 50% mezclada con otra harina.
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.88rem">
+              <strong>🍠 Harina de arroz</strong> — La más versátil. Sustituye 1:1 la harina de trigo en la mayoría de recetas.
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.88rem">
+              <strong>🥜 Harina de almendras</strong> — Aporta humedad y sabor. Perfecta para brownies y tortas densas.
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem;font-size:0.88rem">
+              <strong>🫘 Harina de garbanzo</strong> — Excelente para masas que necesitan estructura.
+            </div>
+          </div>
+          <div style="background:#e8f5e9;border-radius:12px;padding:1rem;font-size:0.88rem">
+            <strong>💡 Tip profesional:</strong> Agrega 1 cucharadita de goma xantana por cada taza de harina sin gluten para mejorar la cohesión de la masa.
+          </div>
+        `
+      },
+      {
+        id: 'decoracion',
+        tag: 'Recetas',
+        emoji: '🎨',
+        title: 'Técnicas de decoración para tortas de cumpleaños',
+        excerpt: 'Desde flores de crema hasta drip cakes, aprende las técnicas más populares para decorar tortas de cumpleaños como un profesional.',
+        author: 'Sofía Díaz',
+        authorEmoji: '🎓',
+        date: '18 octubre 2024',
+        readTime: '7 min',
+        fullContent: `
+          <h2 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:1rem">🎨 Decoración de Tortas</h2>
+          <p style="margin-bottom:1rem">La decoración es el elemento que transforma una torta en una obra de arte. Estas son las técnicas que enseñamos en Duoc:</p>
+          <div style="display:grid;gap:0.8rem;margin-bottom:1rem">
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem">
+              <strong style="color:var(--chocolate)">🌸 Flores de crema</strong>
+              <p style="font-size:0.88rem;margin-top:0.3rem">Usa una boquilla 1M y crema vegetal fría. Presiona firmemente desde el centro hacia afuera en movimiento circular.</p>
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem">
+              <strong style="color:var(--chocolate)">💧 Drip Cake</strong>
+              <p style="font-size:0.88rem;margin-top:0.3rem">Prepara un ganache ligeramente líquido. Aplica desde el borde de la torta ya refrigerada para que los chorreos sean controlados.</p>
+            </div>
+            <div style="background:var(--bg-cream);border-radius:10px;padding:1rem">
+              <strong style="color:var(--chocolate)">✨ Efecto Ombre</strong>
+              <p style="font-size:0.88rem;margin-top:0.3rem">Divide la crema en 3 porciones y agrega colorante progresivamente. Aplica de abajo hacia arriba y difumina con espátula.</p>
+            </div>
+          </div>
+        `
+      },
+      {
+        id: 'comunidad',
+        tag: 'Comunidad',
+        emoji: '🎓',
+        title: 'Programa Duoc: formando el futuro de la repostería',
+        excerpt: 'Conoce cómo nuestra alianza con el Instituto Duoc UC está formando a los próximos grandes reposteros de Chile.',
+        author: 'Equipo Mil Sabores',
+        authorEmoji: '🎂',
+        date: '10 octubre 2024',
+        readTime: '3 min',
+        fullContent: `
+          <h2 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:1rem">🎓 Alianza con Duoc UC</h2>
+          <p style="margin-bottom:1rem">Desde 2010, Pastelería Mil Sabores mantiene una alianza activa con el Instituto Duoc UC para formar a los próximos talentos de la gastronomía chilena.</p>
+          <p style="margin-bottom:1rem">Nuestro programa incluye:</p>
+          <ul style="margin-left:1.2rem;margin-bottom:1rem;line-height:2;font-size:0.9rem">
+            <li>Prácticas profesionales en nuestras instalaciones</li>
+            <li>Talleres mensuales de técnicas avanzadas de repostería</li>
+            <li>Concursos internos con premios en productos y certificaciones</li>
+            <li>Publicación de recetas de estudiantes en nuestro blog</li>
+          </ul>
+          <p style="margin-bottom:1rem">Los estudiantes Duoc que se registren en nuestra plataforma reciben una torta especial gratis en su cumpleaños como reconocimiento a su dedicación.</p>
+          <div style="background:var(--rosa);border-radius:12px;padding:1rem;font-size:0.88rem;color:var(--chocolate)">
+            <strong>¿Eres estudiante Duoc?</strong> Regístrate con tu correo institucional (@duocuc.cl) y activa tu beneficio de cumpleaños.
+          </div>
+        `
+      }
+    ];
+
+    const allTags = ['Todos', 'Recetas', 'Tips', 'Historia', 'Comunidad'];
+    let activeTag = 'Todos';
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderTagFilters();
+      renderArticles();
+    });
+
+    function renderTagFilters() {
+      document.getElementById('tagFilters').innerHTML = allTags.map(tag =>
+        `<button class="tag-filter ${tag === activeTag ? 'active' : ''}" onclick="setTag('${tag}')">${tag}</button>`
+      ).join('');
+    }
+
+    function setTag(tag) {
+      activeTag = tag;
+      renderTagFilters();
+      renderArticles();
+    }
+
+    function renderArticles() {
+      const filtered = activeTag === 'Todos' ? articles : articles.filter(a => a.tag === activeTag);
+      document.getElementById('articlesGrid').innerHTML = filtered.map(a => `
+        <div class="article-card">
+          <div class="article-thumb">${a.emoji}</div>
+          <div class="article-body">
+            <span class="article-tag">${a.tag}</span>
+            <div class="article-title">${a.title}</div>
+            <div class="article-meta">
+              <span>📅 ${a.date}</span>
+              <span>⏱️ ${a.readTime} lectura</span>
+            </div>
+            <div class="article-excerpt">${a.excerpt}</div>
+            <div style="display:flex;gap:0.8rem;align-items:center;flex-wrap:wrap;margin-top:auto;">
+              <button class="btn btn-secondary btn-sm" onclick="openArticle('${a.id}')">Leer más →</button>
+              <div style="display:flex;gap:0.5rem">
+                <button class="btn btn-outline btn-sm" onclick="shareArticle('${a.id}', 'whatsapp')" title="WhatsApp">💬</button>
+                <button class="btn btn-outline btn-sm" onclick="shareArticle('${a.id}', 'facebook')" title="Facebook">📘</button>
+                <button class="btn btn-outline btn-sm" onclick="shareArticle('${a.id}', 'twitter')" title="Twitter/X">🐦</button>
+              </div>
+            </div>
+            <div class="article-author">
+              <div class="author-avatar">${a.authorEmoji}</div>
+              <div><div class="author-name">${a.author}</div><div>Colaborador</div></div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openArticle(id) {
+      const a = articles.find(x => x.id === id);
+      if (!a) return;
+      document.getElementById('articleContent').innerHTML = `
+        <div style="text-align:center;font-size:5rem;margin-bottom:1rem">${a.emoji}</div>
+        <span class="article-tag">${a.tag}</span>
+        <div class="article-meta" style="margin:0.5rem 0 1.2rem">
+          <span>📅 ${a.date}</span><span>⏱️ ${a.readTime} lectura</span>
+          <span>✍️ ${a.author}</span>
+        </div>
+        ${a.fullContent}
+        <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid var(--border)">
+          <p style="font-size:0.88rem;color:var(--text-light);margin-bottom:0.8rem">¿Te gustó este artículo? ¡Compártelo!</p>
+          <div style="display:flex;gap:0.8rem;flex-wrap:wrap">
+            <button class="btn btn-secondary btn-sm" onclick="shareArticle('${id}', 'whatsapp')">💬 WhatsApp</button>
+            <button class="btn btn-secondary btn-sm" onclick="shareArticle('${id}', 'facebook')">📘 Facebook</button>
+            <button class="btn btn-secondary btn-sm" onclick="shareArticle('${id}', 'twitter')">🐦 Twitter/X</button>
+            <button class="btn btn-secondary btn-sm" onclick="shareArticle('${id}', 'instagram')">📸 Instagram</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('articleModal').classList.remove('hidden');
+    }
+
+    function closeArticle() {
+      document.getElementById('articleModal').classList.add('hidden');
+    }
+
+    function shareArticle(id, network) {
+      const a = articles.find(x => x.id === id);
+      const text = `📖 "${a.title}" — Blog Pastelería Mil Sabores 🎂`;
+      const url = window.location.href;
+      const urls = {
+        whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`,
+        facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(text)}`,
+        twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+        instagram: null
+      };
+      if (network === 'instagram') {
+        navigator.clipboard.writeText(text + ' ' + url).then(() => showToast('📋 Link copiado — pégalo en Instagram'));
+      } else if (urls[network]) {
+        window.open(urls[network], '_blank', 'width=600,height=400');
+      }
+    }
+
+    function subscribeNewsletter() {
+      const email = document.getElementById('newsletterEmail').value.trim();
+      if (!email || !email.includes('@')) { showToast('Ingresa un correo válido'); return; }
+      showToast('✅ ¡Suscrito exitosamente! Te enviaremos novedades pronto.');
+      document.getElementById('newsletterEmail').value = '';
+    }
+
+    document.getElementById('articleModal').addEventListener('click', e => {
+      if (e.target === document.getElementById('articleModal')) closeArticle();
+    });
+  </script>
+</body>
+</html>

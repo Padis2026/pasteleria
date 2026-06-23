@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pastelería Mil Sabores | Inicio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <div class="nav-brand">
+      <span class="brand-logo">🎂</span>
+      <span class="brand-name">Mil Sabores</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Inicio</a></li>
+      <li><a href="pages/catalogo.html">Catálogo</a></li>
+      <li><a href="pages/carrito.html">🛒 Carrito <span class="cart-badge" id="cartBadge">0</span></a></li>
+      <li><a href="pages/login.html" id="navAuthLink">Iniciar Sesión</a></li>
+    </ul>
+    <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">50 años de dulzura 🎉 — Récord Guinness 1995</p>
+      <h1 class="hero-title">La pastelería<br/>que hace historia</h1>
+      <p class="hero-subtitle">Tortas artesanales, postres únicos y momentos inolvidables. Diseñados con amor desde Chile para el mundo.</p>
+      <div class="hero-actions">
+        <a href="pages/catalogo.html" class="btn btn-primary">Ver Catálogo</a>
+        <a href="pages/registro.html" class="btn btn-secondary">Registrarse</a>
+      </div>
+      <div class="hero-badges">
+        <span class="badge">🎂 50% descuento +50 años</span>
+        <span class="badge">🎓 Gratis en tu cumpleaños (Duoc)</span>
+        <span class="badge">🏷️ Código FELICES50 → 10% forever</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="cake-card">
+        <div class="cake-emoji">🎂</div>
+        <div class="cake-label">Torta Especial de Cumpleaños</div>
+        <div class="cake-price">$55.000 CLP</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORÍAS -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Nuestras Categorías</h2>
+      <p class="section-sub">Encuentra el producto perfecto para cada ocasión</p>
+      <div class="categories-grid">
+        <a href="pages/catalogo.html?cat=tortas-cuadradas" class="cat-card">
+          <span class="cat-icon">⬛</span>
+          <span class="cat-name">Tortas Cuadradas</span>
+        </a>
+        <a href="pages/catalogo.html?cat=tortas-circulares" class="cat-card">
+          <span class="cat-icon">⭕</span>
+          <span class="cat-name">Tortas Circulares</span>
+        </a>
+        <a href="pages/catalogo.html?cat=postres-individuales" class="cat-card">
+          <span class="cat-icon">🍮</span>
+          <span class="cat-name">Postres Individuales</span>
+        </a>
+        <a href="pages/catalogo.html?cat=sin-azucar" class="cat-card">
+          <span class="cat-icon">💚</span>
+          <span class="cat-name">Sin Azúcar</span>
+        </a>
+        <a href="pages/catalogo.html?cat=tradicional" class="cat-card">
+          <span class="cat-icon">🥐</span>
+          <span class="cat-name">Pastelería Tradicional</span>
+        </a>
+        <a href="pages/catalogo.html?cat=sin-gluten" class="cat-card">
+          <span class="cat-icon">🌾</span>
+          <span class="cat-name">Sin Gluten</span>
+        </a>
+        <a href="pages/catalogo.html?cat=vegana" class="cat-card">
+          <span class="cat-icon">🌱</span>
+          <span class="cat-name">Vegana</span>
+        </a>
+        <a href="pages/catalogo.html?cat=especiales" class="cat-card">
+          <span class="cat-icon">⭐</span>
+          <span class="cat-name">Tortas Especiales</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORIA -->
+  <section class="section section-alt">
+    <div class="container two-col">
+      <div class="history-text">
+        <h2 class="section-title left">50 años haciendo historia</h2>
+        <p>Pastelería Mil Sabores nació hace medio siglo con una misión simple: llevar dulzura auténtica a las familias chilenas. En 1995, fuimos parte de la historia al colaborar en la creación de <strong>la torta más grande del mundo</strong>, reconocida por el Récord Guinness.</p>
+        <p>Hoy celebramos ese legado con una plataforma digital que acerca nuestros productos artesanales a todo Chile, manteniendo la calidad y tradición que nos caracteriza.</p>
+        <a href="pages/catalogo.html" class="btn btn-primary">Explorar productos</a>
+      </div>
+      <div class="history-visual">
+        <div class="milestone-card">
+          <div class="milestone-year">1974</div>
+          <div class="milestone-text">Apertura de nuestra primera tienda</div>
+        </div>
+        <div class="milestone-card highlight">
+          <div class="milestone-year">1995</div>
+          <div class="milestone-text">🏆 Récord Guinness — La torta más grande del mundo</div>
+        </div>
+        <div class="milestone-card">
+          <div class="milestone-year">2024</div>
+          <div class="milestone-text">Lanzamiento de nuestra tienda online</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS DESTACADOS -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Productos Destacados</h2>
+      <div class="products-grid" id="featuredProducts"></div>
+    </div>
+  </section>
+
+  <!-- BLOG / COMUNIDAD -->
+  <section class="section section-alt">
+    <div class="container">
+      <h2 class="section-title">Comunidad & Repostería</h2>
+      <p class="section-sub">Recetas, tips y noticias de nuestros estudiantes Duoc</p>
+      <div class="blog-grid">
+        <div class="blog-card">
+          <div class="blog-emoji">📖</div>
+          <h3>Cómo hacer ganache perfecto</h3>
+          <p>Nuestros estudiantes de gastronomía de Duoc comparten sus secretos para lograr el ganache más suave.</p>
+          <span class="blog-tag">Recetas</span>
+        </div>
+        <div class="blog-card">
+          <div class="blog-emoji">🌟</div>
+          <h3>Historia de nuestra torta Guinness</h3>
+          <p>El detrás de escena del récord que marcó la historia de la repostería chilena en 1995.</p>
+          <span class="blog-tag">Historia</span>
+        </div>
+        <div class="blog-card">
+          <div class="blog-emoji">🌱</div>
+          <h3>Repostería vegana sin sacrificar sabor</h3>
+          <p>Descubre cómo nuestras tortas veganas logran ser igual de deliciosas que las tradicionales.</p>
+          <span class="blog-tag">Tips</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- IMPACTO COMUNITARIO -->
+  <section class="section" style="background:linear-gradient(135deg,#fff8f0,var(--bg-cream))">
+    <div class="container">
+      <h2 class="section-title">💚 Impacto Comunitario</h2>
+      <p class="section-sub">Cada compra que realizas tiene un propósito más grande</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;margin-top:1rem">
+        <div style="background:var(--white);border-radius:20px;padding:2rem;text-align:center;box-shadow:0 4px 16px var(--shadow)">
+          <div style="font-size:3rem;margin-bottom:0.8rem">🎓</div>
+          <h3 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:0.6rem">Estudiantes Duoc</h3>
+          <p style="font-size:0.9rem;color:var(--text-dark)">Cada compra apoya directamente a estudiantes de gastronomía del Instituto Duoc UC, financiando talleres, materiales e insumos para su formación profesional.</p>
+        </div>
+        <div style="background:var(--white);border-radius:20px;padding:2rem;text-align:center;box-shadow:0 4px 16px var(--shadow)">
+          <div style="font-size:3rem;margin-bottom:0.8rem">🌱</div>
+          <h3 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:0.6rem">Productores Locales</h3>
+          <p style="font-size:0.9rem;color:var(--text-dark)">Trabajamos con agricultores y productores locales chilenos para obtener ingredientes frescos y de calidad, fortaleciendo la economía de las comunidades regionales.</p>
+        </div>
+        <div style="background:var(--white);border-radius:20px;padding:2rem;text-align:center;box-shadow:0 4px 16px var(--shadow)">
+          <div style="font-size:3rem;margin-bottom:0.8rem">🎂</div>
+          <h3 style="font-family:'Pacifico',cursive;color:var(--chocolate);margin-bottom:0.6rem">50 Años de Legado</h3>
+          <p style="font-size:0.9rem;color:var(--text-dark)">Medio siglo creando empleo, capacitando artesanos y preservando las tradiciones de la repostería chilena para las generaciones que vienen.</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2.5rem">
+        <div style="display:inline-block;background:var(--rosa);border-radius:16px;padding:1.2rem 2.5rem">
+          <p style="color:var(--chocolate);font-weight:700;font-size:1rem;margin:0">
+            🤝 Al comprar en Mil Sabores, apoyas proyectos educativos y el desarrollo de nuevos talentos en la gastronomía chilena.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REDES SOCIALES -->
+  <section class="section social-section">
+    <div class="container text-center">
+      <h2 class="section-title">Comparte tu dulzura</h2>
+      <p class="section-sub">Comparte tu pedido en redes sociales y etiquétanos</p>
+      <div class="social-btns">
+        <button class="btn-social instagram" onclick="shareNet('instagram')">📸 Instagram</button>
+        <button class="btn-social facebook" onclick="shareNet('facebook')">📘 Facebook</button>
+        <button class="btn-social twitter" onclick="shareNet('twitter')">🐦 Twitter/X</button>
+        <button class="btn-social" onclick="shareNet('whatsapp')">💬 WhatsApp</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <h4 class="footer-brand">🎂 Mil Sabores</h4>
+        <p>Celebrando 50 años de dulzura artesanal en Chile.</p>
+      </div>
+      <div>
+        <h5>Navegación</h5>
+        <ul>
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="pages/catalogo.html">Catálogo</a></li>
+          <li><a href="pages/carrito.html">Carrito</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Mi Cuenta</h5>
+        <ul>
+          <li><a href="pages/login.html">Iniciar Sesión</a></li>
+          <li><a href="pages/blog.html">Blog</a></li>
+      <li><a href="pages/seguimiento.html">📦 Seguimiento</a></li>
+      <li><a href="pages/registro.html">Registrarse</a></li>
+          <li><a href="pages/perfil.html">Mi Perfil</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Contacto</h5>
+        <p>📍 Santiago, Chile</p>
+        <p>📞 +56 2 2345 6789</p>
+        <p>✉️ hola@milsabores.cl</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 Pastelería Mil Sabores. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Render featured products on home
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();
+      updateNavAuth();
+      const featured = products.slice(0, 4);
+      const grid = document.getElementById('featuredProducts');
+      grid.innerHTML = featured.map(p => renderProductCard(p)).join('');
+    });
+
+    function shareNet(network) {
+      const text = '🎂 ¡Descubre Pastelería Mil Sabores! 50 años de dulzura artesanal en Chile. Tortas, postres y más.';
+      const url = window.location.href;
+      const urls = {
+        whatsapp: 'https://wa.me/?text='+encodeURIComponent(text+' '+url),
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url)+'&quote='+encodeURIComponent(text),
+        twitter: 'https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),
+      };
+      if (network === 'instagram') {
+        navigator.clipboard.writeText(text+' '+url).then(() => alert('📋 Link copiado. ¡Pégalo en tu historia de Instagram!'));
+      } else if (navigator.share && (network === 'native')) {
+        navigator.share({ title: 'Pastelería Mil Sabores', text, url });
+      } else if (urls[network]) {
+        window.open(urls[network], '_blank', 'width=600,height=400');
+      }
+    }
+
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('open');
+    }
+  </script>
+</body>
+</html>
