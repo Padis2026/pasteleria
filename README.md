@@ -1,4 +1,4 @@
-# 🎂 Pastelería Mil Sabores — Tienda Online
+#  Pastelería Mil Sabores — Tienda Online
 
 **Proyecto:** TI3V31 — Forma C  
 **Ramo:** Programación Front End  
@@ -6,13 +6,13 @@
 
 ---
 
-## 📋 Descripción
+## Descripción
 
 Plataforma de e-commerce para **Pastelería Mil Sabores**, una pastelería chilena con 50 años de historia que en 1995 colaboró en la creación de la torta más grande del mundo (Récord Guinness). La tienda online permite a los clientes explorar el catálogo, personalizar pedidos, gestionar su carrito de compras y hacer seguimiento de sus pedidos.
 
 ---
 
-## 🗂️ Estructura del Proyecto
+##  Estructura del Proyecto
 
 ```
 pasteleria/
@@ -60,7 +60,7 @@ pasteleria/
 
 ---
 
-## 🚀 Cómo ejecutar el proyecto
+##  Cómo ejecutar el proyecto
 
 Este proyecto es **100% estático** (HTML, CSS y JavaScript puro). No requiere servidor, instalación de dependencias ni compilación.
 
@@ -70,13 +70,13 @@ Este proyecto es **100% estático** (HTML, CSS y JavaScript puro). No requiere s
 2. Abrir la carpeta `pasteleria/`
 3. Hacer doble clic en `index.html`
 
-> ⚠️ **Importante:** Para que las rutas relativas funcionen correctamente, abrir siempre `index.html` desde dentro de la carpeta `pasteleria/`. No mover archivos individualmente.
+>  **Importante:** Para que las rutas relativas funcionen correctamente, abrir siempre `index.html` desde dentro de la carpeta `pasteleria/`. No mover archivos individualmente.
 
-> 💡 **Recomendado:** Usar la extensión **Live Server** de VS Code para una mejor experiencia de desarrollo.
+>  **Recomendado:** Usar la extensión **Live Server** de VS Code para una mejor experiencia de desarrollo.
 
 ---
 
-## ⚙️ Tecnologías Utilizadas
+##  Tecnologías Utilizadas
 
 | Tecnología | Uso |
 |---|---|
@@ -89,7 +89,7 @@ Este proyecto es **100% estático** (HTML, CSS y JavaScript puro). No requiere s
 
 ---
 
-## 🎨 Diseño Visual
+##  Diseño Visual
 
 Los colores y tipografías siguen estrictamente la propuesta visual del enunciado:
 
@@ -141,11 +141,11 @@ Los colores y tipografías siguen estrictamente la propuesta visual del enunciad
 - **Boleta de compra** (`boleta.html`) con detalle completo: productos, precios, IVA, descuentos, datos de entrega
 - Boleta imprimible (función de impresión del navegador)
 - **Seguimiento de pedido** (`seguimiento.html`) con línea de tiempo animada de 5 estados:
-  - ✅ Pedido recibido
-  - 👨‍🍳 Preparando
-  - 📦 Listo para despacho
-  - 🚚 En despacho
-  - 🏠 Entregado
+  -  Pedido recibido
+  -  Preparando
+  -  Listo para despacho
+  -  En despacho
+  -  Entregado
 - Buscador de pedido por número de orden o correo electrónico
 
 ### 6. Gestión de Envíos
@@ -165,7 +165,7 @@ Los colores y tipografías siguen estrictamente la propuesta visual del enunciad
 
 ---
 
-## 📰 Páginas Adicionales (Deseos del Enunciado)
+##  Páginas Adicionales (Deseos del Enunciado)
 
 ### Blog y Comunidad (`blog.html`)
 - 6 artículos completos sobre repostería
@@ -194,7 +194,7 @@ Los colores y tipografías siguen estrictamente la propuesta visual del enunciad
 
 ---
 
-## 💾 Almacenamiento de Datos
+##  Almacenamiento de Datos
 
 El proyecto utiliza `localStorage` del navegador para persistir:
 
@@ -208,7 +208,7 @@ El proyecto utiliza `localStorage` del navegador para persistir:
 
 ---
 
-## 🧪 Cómo Probar las Funcionalidades
+##  Cómo Probar las Funcionalidades
 
 ### Probar descuento +50 años:
 1. Ir a **Registrarse**
@@ -235,7 +235,7 @@ El proyecto utiliza `localStorage` del navegador para persistir:
 
 ---
 
-## 👨‍💻 Autor
+## Autor
 
 Desarrollado como proyecto de evaluación para el ramo **Programación Front End**.  
 Instituto INACAP — 2024.
