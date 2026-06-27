@@ -10,62 +10,153 @@
   <link rel="stylesheet" href="../css/styles.css" />
   <link rel="icon" type="image/jpeg" href="../assets/favicon.jpg" />
   <style>
-    .advanced-filters {
+    /* ── Barra de filtros ── */
+    .catalog-filters {
       background: var(--white);
       border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
+      position: sticky;
+      top: 64px;
+      z-index: 100;
+      box-shadow: 0 2px 8px var(--shadow);
     }
-    .filter-row {
+
+    /* Búsqueda */
+    .filter-search-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.9rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-search-row .search-input {
+      flex: 1;
+      max-width: 420px;
+      min-width: 180px;
+    }
+
+    /* Chips de categoría */
+    .chips-scroll {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+    .chips-scroll::-webkit-scrollbar { display: none; }
+
+    .chip {
+      flex-shrink: 0;
+      padding: 0.4rem 1.1rem;
+      border-radius: 50px;
+      border: 2px solid var(--border);
+      background: transparent;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      font-size: 0.83rem;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+      white-space: nowrap;
+    }
+    .chip:hover {
+      background: var(--bg-cream);
+      border-color: var(--chocolate);
+    }
+    .chip.active {
+      background: var(--chocolate);
+      border-color: var(--chocolate);
+      color: var(--white);
+    }
+
+    /* Fila secundaria: precio, orden, especiales */
+    .filter-secondary {
       display: flex;
       gap: 1rem;
       align-items: center;
       flex-wrap: wrap;
-      margin-bottom: 0.8rem;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
     }
-    .filter-row:last-child { margin-bottom: 0; }
+
     .filter-label {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.07em;
       color: var(--text-light);
-      min-width: 80px;
+      white-space: nowrap;
     }
+
     .price-range { display: flex; align-items: center; gap: 0.5rem; font-size: 0.88rem; }
-    .price-range input[type=range] { width: 120px; accent-color: var(--chocolate); }
+    .price-range input[type=range] { width: 110px; accent-color: var(--chocolate); }
+
+    .filter-secondary select {
+      padding: 0.38rem 0.8rem;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.85rem;
+      background: var(--white);
+      color: var(--text-dark);
+      cursor: pointer;
+    }
+
+    .filter-secondary label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* Barra de resultados */
     .results-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.8rem 2rem;
+      padding: 0.65rem 2rem;
       background: var(--bg-cream);
       font-size: 0.85rem;
       color: var(--text-light);
       flex-wrap: wrap;
       gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
     }
+
+    /* Share bar */
     .share-bar {
       background: var(--chocolate);
-      padding: 0.7rem 2rem;
+      padding: 0.6rem 2rem;
       display: flex;
       align-items: center;
       gap: 1rem;
       flex-wrap: wrap;
     }
-    .share-bar span { color: white; font-size: 0.85rem; font-weight: 700; }
+    .share-bar span { color: white; font-size: 0.83rem; font-weight: 700; }
     .share-bar button {
-      padding: 0.3rem 0.9rem;
+      padding: 0.28rem 0.85rem;
       border-radius: 20px;
-      border: 1.5px solid rgba(255,255,255,0.5);
-      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.1);
       color: white;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
       font-family: 'Lato', sans-serif;
       transition: background 0.2s;
     }
     .share-bar button:hover { background: rgba(255,255,255,0.25); }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .catalog-filters { padding: 0.8rem 1rem; }
+      .results-bar { padding: 0.6rem 1rem; }
+      .filter-secondary { gap: 0.7rem; }
+    }
   </style>
 </head>
 <body>
@@ -94,7 +185,7 @@
   <!-- BANNER DESCUENTO -->
   <div id="discountBanner" style="display:none"></div>
 
-  <!-- BARRA COMPARTIR -->
+  <!-- SHARE BAR -->
   <div class="share-bar">
     <span>Comparte nuestros productos:</span>
     <button onclick="shareNet('whatsapp')">💬 WhatsApp</button>
@@ -103,47 +194,48 @@
     <button onclick="shareNet('instagram')">📸 Instagram</button>
   </div>
 
-  <!-- FILTROS AVANZADOS -->
-  <div class="advanced-filters">
+  <!-- FILTROS -->
+  <div class="catalog-filters">
+
     <!-- Búsqueda -->
-    <div class="filter-row">
-      <span class="filter-label">Buscar</span>
-      <input type="text" class="search-input" id="searchInput" placeholder="🔍 Nombre, descripción, categoría..." oninput="filterProducts()" style="flex:1;max-width:400px" />
+    <div class="filter-search-row">
+      <input
+        type="text"
+        class="search-input"
+        id="searchInput"
+        placeholder="🔍 Nombre, descripción, categoría..."
+        oninput="filterProducts()"
+      />
+      <button class="filter-btn" onclick="clearFilters()">✕ Limpiar</button>
     </div>
 
-    <!-- Categorías -->
-    <div class="filter-row">
-      <span class="filter-label">Categoría</span>
-      <div id="categoryFilters" style="display:flex;flex-wrap:wrap;gap:0.5rem;"></div>
-    </div>
+    <!-- Chips de categoría -->
+    <div class="chips-scroll" id="categoryChips"></div>
 
-    <!-- Precio y orden -->
-    <div class="filter-row">
+    <!-- Precio, orden, especiales -->
+    <div class="filter-secondary">
       <span class="filter-label">Precio máx.</span>
       <div class="price-range">
-        <input type="range" id="priceRange" min="3000" max="60000" step="1000" value="60000" oninput="updatePriceLabel(); filterProducts()" />
-        <span id="priceLabel" style="font-weight:700;color:var(--chocolate);min-width:100px">$60.000 CLP</span>
+        <input type="range" id="priceRange" min="3000" max="60000" step="1000" value="60000"
+          oninput="updatePriceLabel(); filterProducts()" />
+        <span id="priceLabel" style="font-weight:700;color:var(--chocolate);min-width:95px">$60.000 CLP</span>
       </div>
-      <span class="filter-label" style="margin-left:1rem">Ordenar</span>
-      <select id="sortSelect" onchange="filterProducts()" style="padding:0.4rem 0.8rem;border-radius:8px;border:2px solid var(--border);font-family:'Lato',sans-serif;font-size:0.85rem;background:white">
+
+      <span class="filter-label" style="margin-left:0.5rem">Ordenar</span>
+      <select id="sortSelect" onchange="filterProducts()">
         <option value="default">Por defecto</option>
         <option value="price-asc">Precio: menor a mayor</option>
         <option value="price-desc">Precio: mayor a menor</option>
         <option value="name-asc">Nombre A–Z</option>
         <option value="custom">Personalizables primero</option>
       </select>
-    </div>
 
-    <!-- Filtros especiales -->
-    <div class="filter-row">
-      <span class="filter-label">Especiales</span>
-      <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.88rem;cursor:pointer">
+      <label>
         <input type="checkbox" id="filterCustom" onchange="filterProducts()" /> Solo personalizables
       </label>
-      <label style="display:flex;align-items:center;gap:0.4rem;font-size:0.88rem;cursor:pointer">
-        <input type="checkbox" id="filterHealthy" onchange="filterProducts()" /> Opciones saludables (sin azúcar / sin gluten / vegano)
+      <label>
+        <input type="checkbox" id="filterHealthy" onchange="filterProducts()" /> Saludables
       </label>
-      <button class="filter-btn" onclick="clearFilters()" style="margin-left:auto">✕ Limpiar filtros</button>
     </div>
   </div>
 
@@ -202,50 +294,42 @@
   <script src="../js/app.js"></script>
   <script>
     let activeCategory = 'all';
-
     const healthyCats = ['sin-azucar', 'sin-gluten', 'vegana'];
 
     window.addEventListener('DOMContentLoaded', () => {
       const params = new URLSearchParams(window.location.search);
       const catParam = params.get('cat');
       if (catParam) activeCategory = catParam;
-      renderCategoryFilters();
+      renderChips();
       filterProducts();
       renderDiscountBanner();
     });
 
-    function renderCategoryFilters() {
-  const categoryImages = {
-    'all': '../assets/torta-cumpleanos.jpg',
-    'tortas-cuadradas': '../assets/torta-cuadrada-chocolate.jpg',
-    'tortas-circulares': '../assets/torta-circular-vainilla.jpg',
-    'postres-individuales': '../assets/mousse-chocolate.jpg',
-    'sin-azucar': '../assets/cheesecake-sin-azucar.jpg',
-    'tradicional': '../assets/tarta-santiago.jpg',
-    'sin-gluten': '../assets/brownie-sin-gluten.jpg',
-    'vegana': '../assets/torta-vegana-chocolate.jpg',
-    'especiales': '../assets/torta-boda.jpg'
-  };
-
-  document.getElementById('categoryFilters').innerHTML = categories.map(cat =>
-    `<button class="category-card-filter ${cat.id === activeCategory ? 'active' : ''}" onclick="setCategory('${cat.id}')">
-      <img src="${categoryImages[cat.id]}" alt="${cat.label}">
-      <span>${cat.label}</span>
-    </button>`
-  ).join('');
-}
+    /* ── Chips ── */
+    function renderChips() {
+      document.getElementById('categoryChips').innerHTML = categories.map(cat => `
+        <button
+          class="chip${cat.id === activeCategory ? ' active' : ''}"
+          onclick="setCategory('${cat.id}')"
+        >${cat.label}</button>
+      `).join('');
+    }
 
     function setCategory(catId) {
       activeCategory = catId;
-      renderCategoryFilters();
+      renderChips();
       filterProducts();
+      /* scroll suave al grid */
+      document.getElementById('productsGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
+    /* ── Precio ── */
     function updatePriceLabel() {
       const val = parseInt(document.getElementById('priceRange').value);
       document.getElementById('priceLabel').textContent = '$' + val.toLocaleString('es-CL') + ' CLP';
     }
 
+    /* ── Limpiar ── */
     function clearFilters() {
       activeCategory = 'all';
       document.getElementById('searchInput').value = '';
@@ -254,48 +338,50 @@
       document.getElementById('filterCustom').checked = false;
       document.getElementById('filterHealthy').checked = false;
       updatePriceLabel();
-      renderCategoryFilters();
+      renderChips();
       filterProducts();
     }
 
+    /* ── Filtrar y renderizar ── */
     function filterProducts() {
-      const query = document.getElementById('searchInput').value.toLowerCase().trim();
-      const maxPrice = parseInt(document.getElementById('priceRange').value);
-      const sort = document.getElementById('sortSelect').value;
+      const query   = document.getElementById('searchInput').value.toLowerCase().trim();
+      const maxPrice  = parseInt(document.getElementById('priceRange').value);
+      const sort    = document.getElementById('sortSelect').value;
       const onlyCustom = document.getElementById('filterCustom').checked;
       const onlyHealthy = document.getElementById('filterHealthy').checked;
-      const user = getUser();
+      const user    = getUser();
       const discountPct = getUserDiscountPct(user);
 
       let filtered = [...products];
 
-      if (activeCategory !== 'all') filtered = filtered.filter(p => p.category === activeCategory);
-      if (query) filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.desc.toLowerCase().includes(query) ||
-        p.catLabel.toLowerCase().includes(query)
-      );
+      if (activeCategory !== 'all')
+        filtered = filtered.filter(p => p.category === activeCategory);
+      if (query)
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(query) ||
+          p.desc.toLowerCase().includes(query) ||
+          p.catLabel.toLowerCase().includes(query)
+        );
       filtered = filtered.filter(p => p.price <= maxPrice);
-      if (onlyCustom) filtered = filtered.filter(p => p.customizable);
+      if (onlyCustom)  filtered = filtered.filter(p => p.customizable);
       if (onlyHealthy) filtered = filtered.filter(p => healthyCats.includes(p.category));
 
-      // Ordenar
-      if (sort === 'price-asc') filtered.sort((a,b) => a.price - b.price);
+      if (sort === 'price-asc')  filtered.sort((a,b) => a.price - b.price);
       else if (sort === 'price-desc') filtered.sort((a,b) => b.price - a.price);
-      else if (sort === 'name-asc') filtered.sort((a,b) => a.name.localeCompare(b.name));
-      else if (sort === 'custom') filtered.sort((a,b) => (b.customizable?1:0) - (a.customizable?1:0));
+      else if (sort === 'name-asc')  filtered.sort((a,b) => a.name.localeCompare(b.name));
+      else if (sort === 'custom')   filtered.sort((a,b) => (b.customizable?1:0) - (a.customizable?1:0));
 
-      const grid = document.getElementById('productsGrid');
+      const grid  = document.getElementById('productsGrid');
       const empty = document.getElementById('emptyState');
       const count = document.getElementById('resultsCount');
 
-      count.textContent = filtered.length === 0 ? 'Sin resultados' :
-        `Mostrando ${filtered.length} producto${filtered.length !== 1 ? 's' : ''}`;
+      count.textContent = filtered.length === 0
+        ? 'Sin resultados'
+        : `Mostrando ${filtered.length} producto${filtered.length !== 1 ? 's' : ''}`;
 
       const discNote = document.getElementById('discountNote');
       discNote.textContent = discountPct > 0 ? `🏷️ Descuento del ${discountPct}% aplicado` : '';
-      discNote.style.color = 'var(--chocolate)';
-      discNote.style.fontWeight = '700';
+      discNote.style.cssText = 'color:var(--chocolate);font-weight:700';
 
       if (filtered.length === 0) {
         grid.innerHTML = '';
@@ -319,7 +405,7 @@
       const pct = getUserDiscountPct(user);
       const banner = document.getElementById('discountBanner');
       let msg = '';
-      if (isINACAPBirthday(user)) {
+      if (typeof isINACAPBirthday === 'function' && isINACAPBirthday(user)) {
         banner.style.cssText = 'display:block;background:var(--rosa);color:var(--chocolate);text-align:center;padding:0.9rem;font-weight:700;';
         msg = `🎂 ¡Feliz Cumpleaños ${user.name.split(' ')[0]}! Tu torta especial de cumpleaños es GRATIS hoy 🎉`;
       } else if (pct > 0) {
@@ -331,14 +417,15 @@
 
     function shareNet(network) {
       const text = '🎂 ¡Descubre los deliciosos productos artesanales de Pastelería Mil Sabores! Tortas, postres y más con 50 años de tradición.';
-      const url = 'https://milsabores.cl/catalogo';
+      const url  = 'https://milsabores.cl/catalogo';
       const urls = {
-        whatsapp: 'https://wa.me/?text='+encodeURIComponent(text+' '+url),
-        facebook: 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url)+'&quote='+encodeURIComponent(text),
-        twitter: 'https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url),
+        whatsapp: 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url),
+        facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url) + '&quote=' + encodeURIComponent(text),
+        twitter:  'https://twitter.com/intent/tweet?text=' + encodeURIComponent(text) + '&url=' + encodeURIComponent(url),
       };
       if (network === 'instagram') {
-        navigator.clipboard.writeText(text+' '+url).then(() => showToast('📋 Link copiado — pégalo en tu historia de Instagram'));
+        navigator.clipboard.writeText(text + ' ' + url)
+          .then(() => showToast('📋 Link copiado — pégalo en tu historia de Instagram'));
       } else {
         window.open(urls[network], '_blank', 'width=600,height=400');
       }
